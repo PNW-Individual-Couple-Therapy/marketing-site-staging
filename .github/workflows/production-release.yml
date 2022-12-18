@@ -1,0 +1,42 @@
+name: Release distribution to production
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3 
+        with:
+          repository: PNW-Individual-Couple-Therapy/marketing-site-staging
+          path: staging
+          token: ${{ secrets.DEPLOY_PRODUCTION }}
+      - uses: actions/checkout@v3
+        with:
+          repository: PNW-Individual-Couple-Therapy/marketing-site-production
+          path: production
+          token: ${{ secrets.DEPLOY_PRODUCTION }}
+
+      - name: Copy distribution into staging
+        run: |
+          rm -rf production/docs
+          mkdir production/docs
+          cp -R staging/docs/* production/docs
+        
+      - name: Create pull request
+        run: |
+          cd production
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.email "mskalandunas@gmail.com"
+            git config user.name "Mike Skalandunas"
+            git checkout -B update-production
+            git add --all
+            git commit -m "Update production distribution"
+            git push -f origin update-production
+            curl -X POST https://api.github.com/repos/PNW-Individual-Couple-Therapy/marketing-site-production/pulls \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.DEPLOY_PRODUCTION }}" \
+            -d '{"head":"update-production", "base":"main", "title": "Update production distribution", "body": "PR created automatically"}'
+          fi
+
