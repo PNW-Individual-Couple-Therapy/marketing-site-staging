@@ -19,5 +19,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     rootMargin: '-139px 0% -60%',
     threshold: 0.01
   }).observe(document.querySelector('.navigation-observer'));
+  document.getElementById('MobileHeader').addEventListener('click', function (e) {
+    if (e.target.localName === 'a') {
+      document.getElementById('MobileMenuToggle').checked = false;
+    }
+  });
 })();
 //# sourceMappingURL=main.js.map
