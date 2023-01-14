@@ -20,7 +20,7 @@ jobs:
 
       - name: Copy distribution into -production
         run: |
-          rm -rf production/docs
+          rm -v -rf production/*
           mkdir production/docs
           cp -R staging/docs/* production
           echo 'pacific-northwest-therapy.com' > production/CNAME
