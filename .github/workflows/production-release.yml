@@ -18,25 +18,18 @@ jobs:
           path: production
           token: ${{ secrets.DEPLOY_PRODUCTION }}
 
-      - name: Copy distribution into staging
+      - name: Copy distribution into -production
         run: |
+          ls -la production
           rm -rf production/docs
+          ls -la production
           mkdir production/docs
+          ls -la production
           cp -R staging/docs/* production/docs
+          ls -la production
         
       - name: Create pull request
         run: |
           cd production
-          if [ -n "$(git status --porcelain)" ]; then
-            git config user.email "mskalandunas@gmail.com"
-            git config user.name "Mike Skalandunas"
-            git checkout -B update-production
-            git add --all
-            git commit -m "Update production distribution"
-            git push -f origin update-production
-            curl -X POST https://api.github.com/repos/PNW-Individual-Couple-Therapy/marketing-site-production/pulls \
-            -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ secrets.DEPLOY_PRODUCTION }}" \
-            -d '{"head":"update-production", "base":"main", "title": "Update production distribution", "body": "PR created automatically"}'
-          fi
+          ls -la
 
