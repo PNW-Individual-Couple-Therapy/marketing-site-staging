@@ -22,7 +22,7 @@ jobs:
         run: |
           rm -rf production/docs
           mkdir production/docs
-          cp -R staging/docs/* production/*
+          cp -R staging/docs/* production
           echo 'pacific-northwest-therapy.com' > production/CNAME
         
       - name: Create pull request
